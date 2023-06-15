@@ -161,31 +161,26 @@ class Graph {
   }
 
   distanceOfShortestPath(start, end) {
-    let minDistance = Infinity; // 2
-    let currDistance = 0; // 2
-    let toVisitStack = [start]; // [R, I, T, H, T, I, H, J]
-    let visited = new Set(toVisitStack); // [R, T]
+    let minDistance = Infinity;
+    let visited = new Set();
+    let queue = [{ node: start, distance: 0 }];
 
-    while (toVisitStack.length) {
-      let current = toVisitStack.pop();
-      visited.add(current);
+    while (queue.length > 0) {
+      const { node, distance } = queue.shift();
+      visited.add(node);
 
-      if (current === end) {
-        visited = new Set([start]);
-        minDistance = Math.min(minDistance, currDistance);
-        currDistance = 1;
+      if (node === end) {
+        minDistance = Math.min(minDistance, distance);
       }
 
-      for (let neighbor of start.adjacent) {
+      for (const neighbor of node.adjacent) {
         if (!visited.has(neighbor)) {
-          toVisitStack.push(neighbor);
+          queue.push({ node: neighbor, distance: distance + 1 });
         }
       }
-
-      currDistance++;
     }
 
-    return minDistance;
+    return minDistance === Infinity ? undefined : minDistance;
   }
 }
 
