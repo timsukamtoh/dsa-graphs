@@ -141,27 +141,22 @@ class Graph {
   distanceOfShortestPathRecursive(start, end) {
     let minDistance = Infinity;
 
-    function _distance(current, end, currentDistance = 0, visited=new Set()) {
-      visited.add(current);
-
+    function _distance(current, currentDistance = 0, visited = new Set()) {
       if (current === end) {
-        minDistance = currentDistance < minDistance
-          ? currentDistance
-          : minDistance;
-
-        currentDistance = 0;
-
-        visited = new Set();
+        minDistance = Math.min(currentDistance, minDistance);
       };
 
+      visited.add(current);
+
       for (let neighbor of current.adjacent) {
-        _distance(neighbor, end, currentDistance + 1, visited);
+        if (!visited.has(neighbor)) {
+          _distance(neighbor, currentDistance + 1, new Set(visited)); //keep track of a new set for path
+        }
       }
+
     }
-
-    _distance(start, end);
-
-    return minDistance;
+    _distance(start)
+    return minDistance === Infinity ? undefined : minDistance;
 
   }
 
