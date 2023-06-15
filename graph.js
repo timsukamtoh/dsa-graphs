@@ -47,13 +47,35 @@ class Graph {
    */
   removeVertex(vertex) {
     for (const neighbor of vertex.adjacent) {
-      this.removeEdge(vertex, neighbor)
+      this.removeEdge(vertex, neighbor);
     }
     this.nodes.delete(vertex);
   }
 
   /** traverse graph with DFS and returns array of Node values */
-  depthFirstSearch(start) { }
+  depthFirstSearch(start) {
+    let toVisitStack = [start];
+    let visitedNodes = new Set();
+    // let visitedNodeValues = [start.val];
+
+    while (toVisitStack.length > 0) {
+      let current = toVisitStack.pop();
+
+      for (const neighbor of current.adjacent) {
+        if (!visitedNodes.has(neighbor)) {
+          toVisitStack.push(neighbor);
+
+          // visitedNodeValues.push(neighbor.val);
+        }
+      }
+      visitedNodes.add(current);
+    }
+
+    return Array.from(visitedNodes).map(v => v.value);
+    // returns ['T', 'R', 'W', 'Y', 'V', 'U', 'X', 'P', 'Q', 'S']
+
+    // return visitedNodeValues;
+  }
 
   /** traverse graph with BDS and returns array of Node values */
   breadthFirstSearch(start) { }
