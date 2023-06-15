@@ -76,7 +76,7 @@ class Graph {
 
   /** traverse graph with DFS recursively and returns array of Node values */
   depthFirstSearchRecursive(start, visitedNodes = new Set()) {
-    visitedNodes.add(start)
+    visitedNodes.add(start);
 
     for (const neighbor of start.adjacent) {
       if (!visitedNodes.has(neighbor)) {
@@ -114,23 +114,79 @@ class Graph {
   //already visited: {S, P, U, Q, X}
   //to visit: [  R, X, Y, V, Y, V]
 
-  breadthFirstSearchRecursive(start, visitedNodes = new Set(), toVisitQueue=[]) {
-    visitedNodes.add(start)
+  breadthFirstSearchRecursive(start, visitedNodes = new Set(), toVisitQueue = []) {
+    visitedNodes.add(start);
 
     for (const neighbor of start.adjacent) {
       if (!visitedNodes.has(neighbor)) {
-        toVisitQueue.push(neighbor)
+        toVisitQueue.push(neighbor);
       }
     }
-    if(toVisitQueue.length > 0) {
-      return this.breadthFirstSearchRecursive(toVisitQueue.shift(), visitedNodes, toVisitQueue)
+    if (toVisitQueue.length > 0) {
+      return this.breadthFirstSearchRecursive(toVisitQueue.shift(), visitedNodes, toVisitQueue);
     }
 
     return Array.from(visitedNodes).map(v => v.value);
   }
 
   /** find the distance of the shortest path from the start vertex to the end vertex */
-  distanceOfShortestPath(start, end) { }
+  // build graph
+  //
+  //            R
+  //         /  |  \
+  //        I - T - H
+  //            |   |
+  //            J - M
+  //
+  distanceOfShortestPathRecursive(start, end) {
+    let minDistance = Infinity;
+
+    function _distance(current, end, currentDistance = 0) {
+      if (current === end) {
+        minDistance = currentDistance < minDistance
+          ? currentDistance
+          : minDistance;
+        currentDistance = 0;
+      };
+
+      for (let neighbor of current.adjacent) {
+        _distance(neighbor, end, currentDistance + 1);
+      }
+    }
+
+    _distance(start, end);
+
+    return minDistance;
+
+  }
+
+  distanceOfShortestPath(start, end) {
+    let minDistance = Infinity; // 2
+    let currDistance = 0; // 2
+    let toVisitStack = [start]; // [R, I, T, H, T, I, H, J]
+    let visited = new Set(toVisitStack); // [R, T]
+
+    while (toVisitStack.length) {
+      let current = toVisitStack.pop();
+      visited.add(current);
+
+      if (current === end) {
+        visited = new Set([start]);
+        minDistance = Math.min(minDistance, currDistance);
+        currDistance = 1;
+      }
+
+      for (let neighbor of start.adjacent) {
+        if (!visited.has(neighbor)) {
+          toVisitStack.push(neighbor);
+        }
+      }
+
+      currDistance++;
+    }
+
+    return minDistance;
+  }
 }
 
 module.exports = { Graph, Node };

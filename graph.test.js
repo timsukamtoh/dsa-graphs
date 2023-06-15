@@ -445,3 +445,37 @@ describe("distanceOfShortestPath", function () {
     expect(graph.distanceOfShortestPath(t, "rogue node")).toBe(undefined);
   });
 });
+describe("distanceOfShortestPathRecursive", function () {
+  it("should return distance of shortest path from start to end vertices", function () {
+    // build graph
+    //
+    //            R
+    //         /  |  \
+    //        I - T - H
+    //                |
+    //                M
+    //
+
+    let graph = new Graph();
+
+    let r = new Node("R");
+    let i = new Node("I");
+    let t = new Node("T");
+    let h = new Node("H");
+    let m = new Node("M");
+
+    graph.addVertices([r, i, t, h, m]);
+
+    graph.addEdge(r, i);
+    graph.addEdge(r, t);
+    graph.addEdge(r, h);
+    graph.addEdge(i, t);
+    graph.addEdge(t, h);
+    graph.addEdge(h, m);
+
+    expect(graph.distanceOfShortestPathRecursive(r, m)).toBe(2);
+    expect(graph.distanceOfShortestPathRecursive(t, r)).toBe(1);
+    expect(graph.distanceOfShortestPathRecursive(t, m)).toBe(2);
+    expect(graph.distanceOfShortestPathRecursive(t, "rogue node")).toBe(undefined);
+  });
+});
