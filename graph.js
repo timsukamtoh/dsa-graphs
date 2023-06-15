@@ -114,7 +114,7 @@ class Graph {
   //already visited: {S, P, U, Q, X}
   //to visit: [  R, X, Y, V, Y, V]
 
-  breadthFirstSearchRecursive(start, visitedNodes = new Set(), toVisitQueue=[start]) {
+  breadthFirstSearchRecursive(start, visitedNodes = new Set(), toVisitQueue=[]) {
     visitedNodes.add(start)
 
     for (const neighbor of start.adjacent) {
@@ -125,7 +125,7 @@ class Graph {
     if(toVisitQueue.length > 0) {
       return this.breadthFirstSearchRecursive(toVisitQueue.shift(), visitedNodes, toVisitQueue)
     }
-    
+
     return Array.from(visitedNodes).map(v => v.value);
   }
 
