@@ -141,16 +141,21 @@ class Graph {
   distanceOfShortestPathRecursive(start, end) {
     let minDistance = Infinity;
 
-    function _distance(current, end, currentDistance = 0) {
+    function _distance(current, end, currentDistance = 0, visited=new Set()) {
+      visited.add(current);
+
       if (current === end) {
         minDistance = currentDistance < minDistance
           ? currentDistance
           : minDistance;
+
         currentDistance = 0;
+
+        visited = new Set();
       };
 
       for (let neighbor of current.adjacent) {
-        _distance(neighbor, end, currentDistance + 1);
+        _distance(neighbor, end, currentDistance + 1, visited);
       }
     }
 
