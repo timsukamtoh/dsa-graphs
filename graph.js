@@ -60,6 +60,7 @@ class Graph {
 
     while (toVisitStack.length > 0) {
       let current = toVisitStack.pop();
+      visitedNodes.add(current);
 
       for (const neighbor of current.adjacent) {
         if (!visitedNodes.has(neighbor)) {
@@ -68,17 +69,65 @@ class Graph {
           // visitedNodeValues.push(neighbor.val);
         }
       }
-      visitedNodes.add(current);
     }
 
     return Array.from(visitedNodes).map(v => v.value);
-    // returns ['T', 'R', 'W', 'Y', 'V', 'U', 'X', 'P', 'Q', 'S']
+  }
 
-    // return visitedNodeValues;
+  /** traverse graph with DFS recursively and returns array of Node values */
+  depthFirstSearchRecursive(start, visitedNodes = new Set()) {
+    visitedNodes.add(start)
+
+    for (const neighbor of start.adjacent) {
+      if (!visitedNodes.has(neighbor)) {
+        return this.depthFirstSearchRecursive(neighbor, visitedNodes);
+      }
+    }
+
+    return Array.from(visitedNodes).map(v => v.value);
   }
 
   /** traverse graph with BDS and returns array of Node values */
-  breadthFirstSearch(start) { }
+  breadthFirstSearch(start) {
+    let toVisitStack = [start];
+    let visitedNodes = new Set();
+
+    while (toVisitStack.length > 0) {
+      let current = toVisitStack.shift();
+      visitedNodes.add(current);
+
+      for (const neighbor of current.adjacent) {
+        if (!visitedNodes.has(neighbor)) {
+          toVisitStack.push(neighbor);
+
+          // visitedNodeValues.push(neighbor.val);
+        }
+      }
+    }
+
+    return Array.from(visitedNodes).map(v => v.value);
+  }
+
+  /** traverse graph with BDS recursively and returns array of Node values */
+  //[S, P, U, Q, X, V, R, Y, W, T]
+
+  //already visited: {S, P, U, Q, X}
+  //to visit: [  R, X, Y, V, Y, V]
+
+  breadthFirstSearchRecursive(start, visitedNodes = new Set(), toVisitQueue=[start]) {
+    visitedNodes.add(start)
+
+    for (const neighbor of start.adjacent) {
+      if (!visitedNodes.has(neighbor)) {
+        toVisitQueue.push(neighbor)
+      }
+    }
+    if(toVisitQueue.length > 0) {
+      return this.breadthFirstSearchRecursive(toVisitQueue.shift(), visitedNodes, toVisitQueue)
+    }
+    
+    return Array.from(visitedNodes).map(v => v.value);
+  }
 
   /** find the distance of the shortest path from the start vertex to the end vertex */
   distanceOfShortestPath(start, end) { }
